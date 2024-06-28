@@ -2,30 +2,31 @@ import { userEntities } from "../auth/domain/entities/userEntities";
 import { newConnection } from "../database/dbConfig";
 import bcrypt from 'bcrypt';
 
+
 export const User: Omit<userEntities, 'id'>[] = [
     {
         name: "Didier",
         rol: "Padre",
         password: "soyelpapa",
-        email: 'testemail@gmail.com'
+        email: 'homesecurity@gmail.com'
     },
     {
         name: "Margarita",
         rol: "Madre",
         password: "soylamama",
-        email: 'testemail@gmail.com'
+        email: 'homesecurity@gmail.com'
     },
     {
         name: "Joel",
         rol: "Invitado",
         password: "soyelinvitado",
-        email: 'testemail@gmail.com'
+        email: 'homesecurity@gmail.com'
     },
     {
         name: "Jesús",
         rol: "Ratero",
         password: "soyelratero",
-        email: 'testemail@gmail.com'
+        email: 'homesecurity@gmail.com'
     }
 ];
 

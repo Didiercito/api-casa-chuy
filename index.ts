@@ -24,4 +24,4 @@ app.use('/api/v1/lightfocus', lightFocusRouter);
 
 app.listen(PORT, () => {
     console.log(`Server corriendo en el puerto ${PORT}`);
-})
+});

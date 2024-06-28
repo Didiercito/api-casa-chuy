@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Historial de Acciones de Focos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      margin: 20px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .name {
+      font-weight: bold;
+    }
+    .status-on button {
+      background-color: green;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: default;
+    }
+    .status-off button {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: default;
+    }
+    .user-info {
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Historial de Acciones de Focos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Luz</th>
+          <th>Estado</th>
+          <th>Realizado por</th>
+          <th>Encendido</th>
+          <th>Apagado</th>
+        </tr>
+      </thead>
+      <tbody class="historial">
+        {{history}}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const historialContainer = document.querySelector('.historial');
+    const source = new EventSource("http://localhost:3030/api/v1/lightfocus/events");
+
+    source.addEventListener('lightfocus', (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log(data); // Verifica los datos recibidos en la consola
+        if (data.historial) {
+          data.historial.forEach(item => addHistorialItem(item));
+        } else {
+          addHistorialItem(data);
+        }
+      } catch (error) {
+        console.error('Error al parsear JSON:', error);
+      }
+    });
+
+    source.addEventListener('lightfocus-history', (event) => {
+      try {
+        const historyData = JSON.parse(event.data);
+        console.log(historyData);
+        if (Array.isArray(historyData.historial)) {
+          historyData.historial.forEach(item => addHistorialItem(item));
+        } else {
+          console.error('Error: historial no es un arreglo');
+        }
+      } catch (error) {
+        console.error('Error al parsear JSON:', error);
+      }
+    });
+
+    function addHistorialItem(item) {
+      const statusClass = item.status === 'on' ? 'status-on' : 'status-off';
+      const statusText = item.status === 'on' ? 'Encendido' : 'Apagado';
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td class="name">${item.name}</td>
+        <td class="${statusClass}"><button>${statusText}</button></td>
+        <td>${item.userName} (${item.userRole})</td>
+        <td>${new Date(item.timeTurnedOn).toLocaleString()}</td>
+        <td>${new Date(item.timeTurnedOff).toLocaleString()}</td>
+      `;
+      historialContainer.appendChild(row);
+    }
+
+    source.onerror = (event) => {
+      console.error('Error de SSE:', event);
+    };
+  </script>
+</body>
+</html>

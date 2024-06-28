@@ -20,10 +20,10 @@ export class UserLoginUseCase {
         try {
             const user = await this.userRepository.verifyUser(email, password);
             if (!user) {
-                this.invalidUser(); // Lanza un error si el usuario no es válido
+                this.invalidUser(); 
             }
 
-            const token = await generateToken({ email, rol: user?.rol, name: user?.name }); // Genera el token con el email y el rol
+            const token = await generateToken({ email, rol: user?.rol, name: user?.name, id: user?.id }); // Genera el token con el email y el rol
             return { user, token };
         } catch (error) {
             console.error('Error en la verificación de usuario:', error);

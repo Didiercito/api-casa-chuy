@@ -3,44 +3,50 @@ import { newConnection } from "../database/dbConfig";
 
 export const Lightfocus: Omit<LightfocusEntities, 'idLightfocus'>[] = [
     {
-        namelightfocus: "Sala",
+
+        namelightfocus: "Sala", // Corregido el nombre del campo
         status: "off",
         userName: "",
         userRole: "",
-        timesTurnedOn: 0,
-        userId: 0
+        userId: 0,
+        timeTurnedOn: new Date(),
+        timeTurnedOff: new Date() 
     },
     {
-        namelightfocus: "Baño",
+        namelightfocus: "Baño", // Corregido el nombre del campo
         status: "off",
         userName: "",
         userRole: "",
-        timesTurnedOn: 0,
-        userId: 0
+        userId: 0,
+        timeTurnedOn: new Date(), // Corregido el nombre del campo
+        timeTurnedOff: new Date() // Corregido el nombre del campo
     },
     {
-        namelightfocus: "Garaje",
+        namelightfocus: "Garaje", // Corregido el nombre del campo
         status: "off",
         userName: "",
         userRole: "",
-        timesTurnedOn: 0,
-        userId: 0
+        userId: 0,
+        timeTurnedOn: new Date(), // Corregido el nombre del campo
+        timeTurnedOff: new Date() // Corregido el nombre del campo
     },
     {
-        namelightfocus: "Cuarto principal",
+        namelightfocus: "Cuarto principal", // Corregido el nombre del campo
         status: "off",
         userName: "",
         userRole: "",
-        timesTurnedOn: 0,
-        userId: 0
+        userId: 0,
+        timeTurnedOn: new Date(), // Corregido el nombre del campo
+        timeTurnedOff: new Date() // Corregido el nombre del campo
     },
     {
-        namelightfocus: "Cocina",
+        namelightfocus: "Cocina", // Corregido el nombre del campo
         status: "off",
         userName: "",
         userRole: "",
-        timesTurnedOn: 0,
-        userId: 0
+        userId: 0,
+        timeTurnedOn: new Date(), // Corregido el nombre del campo
+        timeTurnedOff: new Date() // Corregido el nombre del campo
     }
 ];
 
@@ -64,15 +70,16 @@ export const seedLightfocus = async () => {
             const lightfocusExists = await checkLightfocusExists(lightfocus);
             if (!lightfocusExists) {
                 allLightfocusExist = false;
-                const insertQuery = 'INSERT INTO Lightfocus (namelightfocus, status, userName, userRole, timesTurnedOn, userId) VALUES (?, ?, ?, ?, ?, ?)';
+                const insertQuery = 'INSERT INTO Lightfocus (namelightfocus, status, userName, userRole, userId, timeTurnedOn, timeTurnedOff) VALUES (?, ?, ?, ?, ?, ?, ?)';
                 await new Promise((resolve, reject) => {
-                    newConnection.query(insertQuery, [lightfocus.namelightfocus, lightfocus.status, lightfocus.userName, lightfocus.userRole, lightfocus.timesTurnedOn, lightfocus.userId], (err, results) => {
+                    newConnection.query(insertQuery, [lightfocus.namelightfocus, lightfocus.status, lightfocus.userName, lightfocus.userRole, lightfocus.userId, lightfocus.timeTurnedOn, lightfocus.timeTurnedOff], (err, results) => {
                         if (err) {
                             return reject(err);
                         }
                         resolve(results);
                     });
                 });
+
             }
         } catch (err) {
             console.error('Error procesando foco de luz:', err);
@@ -82,6 +89,6 @@ export const seedLightfocus = async () => {
     if (allLightfocusExist) {
         console.log('Todos los focos de luz ya existen');
     } else {
-        console.log('Focos de la casa insertadamente correctamente');
+        console.log('Focos de la casa insertados correctamente');
     }
 };

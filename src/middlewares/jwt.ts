@@ -17,27 +17,26 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
     const token = authHeader && authHeader.split(' ')[1];
 
     if (token == null) {
-        return res.sendStatus(401); // Unauthorized
+        return res.sendStatus(401); 
     }
 
     jwt.verify(token, secretKey, (err, user) => {
         if (err) {
-            return res.sendStatus(403); // Forbidden
+            return res.sendStatus(403); 
         }
 
         (req as any).user = user as JwtPayload;
         next();
     });
 };
-
-
 export const isAuthorized = (role: string, action: string): boolean => {
     const rolesPermissions: { [key: string]: string[] } = {
         Invitado: ['turn-on', 'turn-off'],
-        Madre: ['turn-on', 'turn-off'],
-        Padre: ['turn-on', 'turn-off'],
+        Madre: ['turn-on', 'turn-off', 'view-history', 'send-email'],
+        Padre: ['turn-on', 'turn-off', 'view-history', 'send-email'],
         Ratero: [],
     };
 
     return rolesPermissions[role]?.includes(action) || false;
 };
+
